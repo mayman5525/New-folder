@@ -18,6 +18,11 @@ exports.createProduct = async (req, res) => {
       applications_en,
       details_ar,
       details_en,
+      crossSection,
+      diameter,
+      length,
+      shape,
+      ratio,
     } = req.body;
 
     // Convert JSON fields to string if they are objects
@@ -65,6 +70,11 @@ exports.createProduct = async (req, res) => {
       details_en: parsedDetailsEn,
       image,
       pdfUrl,
+      crossSection,
+      diameter,
+      length,
+      shape,
+      ratio,
     });
 
     res.status(201).json({
@@ -115,6 +125,11 @@ exports.updateProduct = async (req, res) => {
       applications_en,
       details_ar,
       details_en,
+      crossSection,
+      diameter,
+      length,
+      shape,
+      ratio,
     } = req.body;
 
     // Ensure JSON fields are stored as strings
@@ -166,6 +181,11 @@ exports.updateProduct = async (req, res) => {
       applications_en: parsedApplicationsEn,
       details_ar: parsedDetailsAr,
       details_en: parsedDetailsEn,
+      crossSection: crossSection,
+      diameter: diameter,
+      length: length,
+      shape: shape,
+      ratio: ratio,
       image: image || product.image, // Keep existing if not uploaded
       pdfUrl: pdfUrl || product.pdfUrl, // Keep existing if not uploaded
     });
