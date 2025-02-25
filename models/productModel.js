@@ -49,6 +49,21 @@ module.exports = (sequelize, DataTypes) => {
       details_ar: {
         type: DataTypes.TEXT,
       },
+      ratio: {
+        type: DataTypes.TEXT,
+      },
+      crossSection: {
+        type: DataTypes.TEXT,
+      },
+      diameter: {
+        type: DataTypes.TEXT,
+      },
+      length: {
+        type: DataTypes.TEXT,
+      },
+      shape: {
+        type: DataTypes.TEXT,
+      },
       details_en: {
         type: DataTypes.TEXT,
       },
