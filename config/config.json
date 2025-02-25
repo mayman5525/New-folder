@@ -13,11 +13,9 @@
     "host": "localhost",
     "dialect": "postgres"
   },
+
   "production": {
-    "username": "postgres",
-    "password": "123",
-    "database": "kandeel",
-    "host": "localhost",
+    "use_env_variable": "DB_URL",
     "dialect": "postgres"
   }
 }
