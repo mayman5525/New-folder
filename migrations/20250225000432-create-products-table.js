@@ -35,12 +35,6 @@ module.exports = {
       pdfUrl: {
         type: Sequelize.STRING,
       },
-      specifications_ar: {
-        type: Sequelize.TEXT,
-      },
-      specifications_en: {
-        type: Sequelize.TEXT,
-      },
       applications_ar: {
         type: Sequelize.ARRAY(Sequelize.STRING),
       },
