@@ -53,6 +53,21 @@ module.exports = {
       details_en: {
         type: Sequelize.TEXT,
       },
+      ratio: {
+        type: Sequelize.STRING,
+      },
+      crossSection: {
+        type: Sequelize.STRING,
+      },
+      diameter: {
+        type: Sequelize.STRING,
+      },
+      length: {
+        type: Sequelize.STRING,
+      },
+      shape: {
+        type: Sequelize.STRING,
+      },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,
