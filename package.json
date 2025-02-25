@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "postinstall": "npx sequelize db:migrate"
+    "postinstall": "npx sequelize-cli db:migrate"
   },
   "keywords": [],
   "author": "",
@@ -23,7 +23,8 @@
     "sequelize": "^6.37.5"
   },
   "devDependencies": {
-    "nodemon": "^3.1.9"
+    "nodemon": "^3.1.9",
+    "sequelize-cli": "^6.6.2"
   },
   "engines": {
     "node": "18.x",
