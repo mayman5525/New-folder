@@ -33,8 +33,8 @@ const storage = new CloudinaryStorage({
     } else if (isPDF) {
       return {
         folder,
-        format: "pdf", // Keep PDFs in original format
         public_id: `${Date.now()}-${file.originalname.split(".")[0]}`,
+        resource_type: "raw", // Ensure PDFs are uploaded as raw files
       };
     } else {
       throw new Error("Unsupported file type");

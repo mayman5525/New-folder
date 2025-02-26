@@ -47,6 +47,7 @@ module.exports = {
       details_en: {
         type: Sequelize.TEXT,
       },
+
       ratio: {
         type: Sequelize.STRING,
       },
