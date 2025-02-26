@@ -12,8 +12,6 @@ exports.createProduct = async (req, res) => {
       description_en,
       heroDescription_ar,
       heroDescription_en,
-      specifications_ar,
-      specifications_en,
       applications_ar,
       applications_en,
       details_ar,
@@ -25,15 +23,6 @@ exports.createProduct = async (req, res) => {
       ratio,
     } = req.body;
 
-    // Convert JSON fields to string if they are objects
-    const parsedSpecificationsAr =
-      typeof specifications_ar === "object"
-        ? JSON.stringify(specifications_ar)
-        : specifications_ar;
-    const parsedSpecificationsEn =
-      typeof specifications_en === "object"
-        ? JSON.stringify(specifications_en)
-        : specifications_en;
     const parsedDetailsAr =
       typeof details_ar === "object" ? JSON.stringify(details_ar) : details_ar;
     const parsedDetailsEn =
@@ -62,8 +51,6 @@ exports.createProduct = async (req, res) => {
       description_en,
       heroDescription_ar,
       heroDescription_en,
-      specifications_ar: parsedSpecificationsAr,
-      specifications_en: parsedSpecificationsEn,
       applications_ar: parsedApplicationsAr,
       applications_en: parsedApplicationsEn,
       details_ar: parsedDetailsAr,
