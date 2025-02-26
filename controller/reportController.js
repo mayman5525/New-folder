@@ -1,40 +1,96 @@
 const { Report } = require("../models");
 
-exports.createReport = async (req, res) => {
+// Create Report
+const createReport = async (req, res) => {
   try {
-    const report = await Report.create(req.body);
-    res.status(201).json(report);
+    const { name, description } = req.body;
+    const image = req.files?.image ? req.files.image[0].path : null; // Getting image path if uploaded
+
+    const report = await Report.create({ name, description, Image: image });
+
+    res.status(201).json({ message: "Report created successfully", report });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error creating report", error: error.message });
   }
 };
 
-exports.getReports = async (req, res) => {
+// Get All Reports
+const getReports = async (req, res) => {
   try {
     const reports = await Report.findAll();
-    res.json(reports);
+    res.status(200).json(reports);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error retrieving reports", error: error.message });
   }
 };
 
-exports.updateReport = async (req, res) => {
+// Get Report by ID
+const getReportById = async (req, res) => {
   try {
-    const report = await Report.update(req.body, {
-      where: { id: req.params.id },
-    });
-    res.json(report);
+    const { id } = req.params;
+    const report = await Report.findByPk(id);
+
+    if (!report) {
+      return res.status(404).json({ message: "Report not found" });
+    }
+
+    res.status(200).json(report);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error retrieving report", error: error.message });
   }
 };
-exports.deleteReport = async (req, res) => {
+
+// Update Report
+const updateReport = async (req, res) => {
   try {
-    const report = await Report.destroy({
-      where: { id: req.params.id },
-    });
-    res.json(report);
+    const { id } = req.params;
+    const { name, description } = req.body;
+    const image = req.files?.image ? req.files.image[0].path : null;
+
+    const report = await Report.findByPk(id);
+    if (!report) {
+      return res.status(404).json({ message: "Report not found" });
+    }
+
+    await report.update({ name, description, Image: image || report.Image });
+
+    res.status(200).json({ message: "Report updated successfully", report });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error updating report", error: error.message });
   }
+};
+
+// Delete Report
+const deleteReport = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const report = await Report.findByPk(id);
+
+    if (!report) {
+      return res.status(404).json({ message: "Report not found" });
+    }
+
+    await report.destroy();
+    res.status(200).json({ message: "Report deleted successfully" });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error deleting report", error: error.message });
+  }
+};
+
+module.exports = {
+  createReport,
+  getReports,
+  getReportById,
+  updateReport,
+  deleteReport,
 };

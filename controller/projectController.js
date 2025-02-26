@@ -1,40 +1,96 @@
 const { Project } = require("../models");
 
-exports.createProject = async (req, res) => {
+// Create Project
+const createProject = async (req, res) => {
   try {
-    const project = await Project.create(req.body);
-    res.status(201).json(project);
+    const { name, description } = req.body;
+    const image = req.files?.image ? req.files.image[0].path : null; // Getting image path if uploaded
+
+    const project = await Project.create({ name, description, Image: image });
+
+    res.status(201).json({ message: "Project created successfully", project });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error creating project", error: error.message });
   }
 };
 
-exports.getProjects = async (req, res) => {
+// Get All Projects
+const getProjects = async (req, res) => {
   try {
     const projects = await Project.findAll();
-    res.json(projects);
+    res.status(200).json(projects);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error retrieving projects", error: error.message });
   }
 };
 
-exports.updateProject = async (req, res) => {
+// Get Project by ID
+const getProjectById = async (req, res) => {
   try {
-    const project = await Project.update(req.body, {
-      where: { id: req.params.id },
-    });
-    res.json(project);
+    const { id } = req.params;
+    const project = await Project.findByPk(id);
+
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+
+    res.status(200).json(project);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error retrieving project", error: error.message });
   }
 };
-exports.deleteProject = async (req, res) => {
+
+// Update Project
+const updateProject = async (req, res) => {
   try {
-    const project = await Project.destroy({
-      where: { id: req.params.id },
-    });
-    res.json(project);
+    const { id } = req.params;
+    const { name, description } = req.body;
+    const image = req.files?.image ? req.files.image[0].path : null;
+
+    const project = await Project.findByPk(id);
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+
+    await project.update({ name, description, Image: image || project.Image });
+
+    res.status(200).json({ message: "Project updated successfully", project });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error updating project", error: error.message });
   }
+};
+
+// Delete Project
+const deleteProject = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const project = await Project.findByPk(id);
+
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+
+    await project.destroy();
+    res.status(200).json({ message: "Project deleted successfully" });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error deleting project", error: error.message });
+  }
+};
+
+module.exports = {
+  createProject,
+  getProjects,
+  getProjectById,
+  updateProject,
+  deleteProject,
 };

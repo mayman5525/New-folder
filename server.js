@@ -17,8 +17,7 @@ app.use("/reports", reportRoutes);
 app.use("/products", productRoutes);
 
 const PORT = process.env.PORT || 5000;
-sequelize.sync({ alter: true });
-sequelize.sync({ force: false }).then(() => {
+sequelize.sync({ alter: true, force: false }).then(() => {
   console.log("Database connected");
   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 });
