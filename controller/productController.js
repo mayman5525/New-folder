@@ -57,7 +57,18 @@ exports.createProduct = async (req, res) => {
 
     // Ensure files exist before accessing their paths
     const image = req.files && req.files.image ? req.files.image[0].path : null;
-    const pdfUrl = req.files && req.files.pdf ? req.files.pdf[0].path : null;
+
+    // Modify PDF URL to force inline display if it exists
+    let pdfUrl = null;
+    if (req.files && req.files.pdf) {
+      // Get original Cloudinary URL
+      pdfUrl = req.files.pdf[0].path;
+
+      // Modify the URL to ensure PDF displays inline
+      if (pdfUrl && pdfUrl.includes("/upload/")) {
+        pdfUrl = pdfUrl.replace("/upload/", "/upload/fl_attachment:false/");
+      }
+    }
 
     const newProduct = await Product.create({
       id,
@@ -95,7 +106,6 @@ exports.createProduct = async (req, res) => {
     });
   }
 };
-
 exports.getProductById = async (req, res) => {
   try {
     const product = await Product.findByPk(req.params.id);
@@ -110,6 +120,26 @@ exports.getProducts = async (req, res) => {
     res.json(products);
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+};
+exports.getPdf = async (req, res) => {
+  try {
+    const product = await Product.findByPk(req.params.id);
+    if (!product || !product.pdfUrl) {
+      return res.status(404).send("PDF not found");
+    }
+
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      'inline; filename="product-document.pdf"'
+    );
+
+    res.redirect(
+      product.pdfUrl.replace("/upload/", "/upload/fl_attachment:false/")
+    );
+  } catch (error) {
+    res.status(500).send("Error serving PDF: " + error.message);
   }
 };
 exports.updateProduct = async (req, res) => {

@@ -5,6 +5,7 @@ const {
   getProductById,
   updateProduct,
   deleteProduct,
+  getPdf,
 } = require("../controller/productController");
 const router = express.Router();
 const { upload } = require("../uploadUtils");
@@ -18,6 +19,7 @@ router.post(
 );
 
 router.get("/", getProducts);
+router.get("/view-pdf/:id", getPdf);
 router.get("/:id", getProductById);
 router.put(
   "/:id",

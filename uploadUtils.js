@@ -36,6 +36,8 @@ const storage = new CloudinaryStorage({
         public_id: `${Date.now()}-${file.originalname.split(".")[0]}`,
         resource_type: "raw",
         access_mode: "public",
+        delivery_type: "upload",
+        format: "pdf",
       };
     } else {
       throw new Error("Unsupported file type");
