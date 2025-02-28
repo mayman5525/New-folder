@@ -9,12 +9,17 @@ const {
 const router = express.Router();
 const { upload } = require("../uploadUtils");
 
-router.post("/", upload.fields([{ name: "image", maxCount: 1 }]), createReport);
+router.post(
+  "/",
+  upload.fields([{ name: "image", maxCount: 1 }]), // Upload Image
+  createReport
+);
+
 router.get("/", getReports);
 router.get("/:id", getReportById);
 router.put(
   "/:id",
-  upload.fields([{ name: "image", maxCount: 1 }]),
+  upload.fields([{ name: "image", maxCount: 1 }]), // Upload Image
   updateReport
 );
 router.delete("/:id", deleteReport);

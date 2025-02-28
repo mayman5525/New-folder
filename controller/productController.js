@@ -23,23 +23,39 @@ exports.createProduct = async (req, res) => {
       ratio,
     } = req.body;
 
+    // Ensure applications_ar and applications_en are valid JSON arrays
+    let parsedApplicationsAr = [];
+    let parsedApplicationsEn = [];
+
+    try {
+      parsedApplicationsAr = Array.isArray(applications_ar)
+        ? applications_ar
+        : JSON.parse(applications_ar || "[]");
+    } catch (error) {
+      parsedApplicationsAr = [];
+    }
+
+    try {
+      parsedApplicationsEn = Array.isArray(applications_en)
+        ? applications_en
+        : JSON.parse(applications_en || "[]");
+    } catch (error) {
+      parsedApplicationsEn = [];
+    }
+
+    // Ensure details_ar and details_en are JSON strings
     const parsedDetailsAr =
-      typeof details_ar === "object" ? JSON.stringify(details_ar) : details_ar;
+      typeof details_ar === "object"
+        ? JSON.stringify(details_ar)
+        : details_ar || "{}";
     const parsedDetailsEn =
-      typeof details_en === "object" ? JSON.stringify(details_en) : details_en;
+      typeof details_en === "object"
+        ? JSON.stringify(details_en)
+        : details_en || "{}";
 
-    // Ensure applications_ar and applications_en are arrays
-    const parsedApplicationsAr = Array.isArray(applications_ar)
-      ? applications_ar
-      : JSON.parse(applications_ar || "[]");
-
-    const parsedApplicationsEn = Array.isArray(applications_en)
-      ? applications_en
-      : JSON.parse(applications_en || "[]");
-
-    // Get uploaded file URLs
-    const image = req.files?.image?.[0]?.path || null;
-    const pdfUrl = req.files?.pdf?.[0]?.path || null;
+    // Ensure files exist before accessing their paths
+    const image = req.files && req.files.image ? req.files.image[0].path : null;
+    const pdfUrl = req.files && req.files.pdf ? req.files.pdf[0].path : null;
 
     const newProduct = await Product.create({
       id,

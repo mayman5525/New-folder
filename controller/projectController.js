@@ -3,10 +3,25 @@ const { Project } = require("../models");
 // Create Project
 const createProject = async (req, res) => {
   try {
-    const { name, description } = req.body;
-    const image = req.files?.image ? req.files.image[0].path : null; // Getting image path if uploaded
+    const {
+      name_ar,
+      name_en,
+      mainDescription_ar,
+      mainDescription_en,
+      description_ar,
+      description_en,
+    } = req.body;
+    const image = req.files?.image ? req.files.image[0].path : null; // Get image path if uploaded
 
-    const project = await Project.create({ name, description, Image: image });
+    const project = await Project.create({
+      name_ar,
+      name_en,
+      description_ar,
+      mainDescription_ar,
+      mainDescription_en,
+      description_en,
+      Image: image,
+    });
 
     res.status(201).json({ message: "Project created successfully", project });
   } catch (error) {
@@ -50,7 +65,14 @@ const getProjectById = async (req, res) => {
 const updateProject = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, description } = req.body;
+    const {
+      name_ar,
+      name_en,
+      mainDescription_ar,
+      mainDescription_en,
+      description_ar,
+      description_en,
+    } = req.body;
     const image = req.files?.image ? req.files.image[0].path : null;
 
     const project = await Project.findByPk(id);
@@ -58,7 +80,15 @@ const updateProject = async (req, res) => {
       return res.status(404).json({ message: "Project not found" });
     }
 
-    await project.update({ name, description, Image: image || project.Image });
+    await project.update({
+      name_ar,
+      name_en,
+      mainDescription_ar,
+      mainDescription_en,
+      description_ar,
+      description_en,
+      Image: image || project.Image, // Keep existing image if no new one is uploaded
+    });
 
     res.status(200).json({ message: "Project updated successfully", project });
   } catch (error) {

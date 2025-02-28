@@ -34,7 +34,8 @@ const storage = new CloudinaryStorage({
       return {
         folder,
         public_id: `${Date.now()}-${file.originalname.split(".")[0]}`,
-        resource_type: "raw", // Ensure PDFs are uploaded as raw files
+        resource_type: "raw",
+        access_mode: "public",
       };
     } else {
       throw new Error("Unsupported file type");
@@ -45,6 +46,7 @@ const storage = new CloudinaryStorage({
 const upload = multer({
   storage,
   fileFilter: (req, file, cb) => {
+    console.log("📂 File received:", file.originalname, file.mimetype);
     if (
       file.mimetype.startsWith("image/") ||
       file.mimetype === "application/pdf"
