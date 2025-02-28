@@ -34,12 +34,6 @@ module.exports = (sequelize, DataTypes) => {
       pdfUrl: {
         type: DataTypes.STRING,
       },
-      specifications_ar: {
-        type: DataTypes.TEXT,
-      },
-      specifications_en: {
-        type: DataTypes.TEXT,
-      },
       applications_ar: {
         type: DataTypes.ARRAY(DataTypes.STRING),
       },
@@ -65,6 +59,12 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TEXT,
       },
       details_en: {
+        type: DataTypes.TEXT,
+      },
+      filter_type_ar: {
+        type: DataTypes.TEXT,
+      },
+      filter_type_en: {
         type: DataTypes.TEXT,
       },
       createdAt: {
