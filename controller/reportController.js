@@ -77,6 +77,7 @@ const updateReport = async (req, res) => {
 
     const report = await Report.findByPk(id);
     if (!report) {
+      const x = console.log();
       return res.status(404).json({ message: "Report not found" });
     }
 
@@ -98,7 +99,6 @@ const updateReport = async (req, res) => {
   }
 };
 
-// Delete Report
 const deleteReport = async (req, res) => {
   try {
     const { id } = req.params;

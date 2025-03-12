@@ -35,6 +35,7 @@ exports.createProduct = async (req, res) => {
         : JSON.parse(applications_ar || "[]");
     } catch (error) {
       parsedApplicationsAr = [];
+      throw new Error("Invalid JSON for applications_ar: " + error.message);
     }
 
     try {
@@ -43,17 +44,18 @@ exports.createProduct = async (req, res) => {
         : JSON.parse(applications_en || "[]");
     } catch (error) {
       parsedApplicationsEn = [];
+      throw new Error("Invalid JSON for applications_en: " + error.message);
     }
 
-    // Ensure details_ar and details_en are JSON strings
-    const parsedDetailsAr =
-      typeof details_ar === "object"
-        ? JSON.stringify(details_ar)
-        : details_ar || "{}";
-    const parsedDetailsEn =
-      typeof details_en === "object"
-        ? JSON.stringify(details_en)
-        : details_en || "{}";
+    // // Ensure details_ar and details_en are JSON strings
+    // const parsedDetailsAr =
+    //   typeof details_ar === "object"
+    //     ? JSON.stringify(details_ar)
+    //     : details_ar || "{}";
+    // const parsedDetailsEn =
+    //   typeof details_en === "object"
+    //     ? JSON.stringify(details_en)
+    //     : details_en || "{}";
 
     // Ensure files exist before accessing their paths
     const image = req.files && req.files.image ? req.files.image[0].path : null;
@@ -84,8 +86,8 @@ exports.createProduct = async (req, res) => {
       heroDescription_en,
       applications_ar: parsedApplicationsAr,
       applications_en: parsedApplicationsEn,
-      details_ar: parsedDetailsAr,
-      details_en: parsedDetailsEn,
+      details_ar: details_ar,
+      details_en: details_en,
       image,
       pdfUrl,
       crossSection,
