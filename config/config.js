@@ -8,10 +8,19 @@ module.exports = {
     host: process.env.DB_HOST || "127.0.0.1",
     port: process.env.DB_PORT || 5432,
     dialect: "postgres",
-    logging: false, // Disable logging for cleaner console output
+    logging: false,
   },
   test: {
-    use_env_variable: "DATABASE_URL",
+    // Check if DATABASE_URL exists, otherwise use individual connection parameters
+    ...(process.env.DATABASE_URL
+      ? { url: process.env.DATABASE_URL }
+      : {
+          username: process.env.DB_USER,
+          password: process.env.DB_PASSWORD,
+          database: process.env.DB_NAME,
+          host: process.env.DB_HOST,
+          port: process.env.DB_PORT || 5432,
+        }),
     dialect: "postgres",
     dialectOptions: {
       ssl: {
@@ -21,7 +30,16 @@ module.exports = {
     },
   },
   production: {
-    use_env_variable: "DATABASE_URL",
+    // Check if DATABASE_URL exists, otherwise use individual connection parameters
+    ...(process.env.DATABASE_URL
+      ? { url: process.env.DATABASE_URL }
+      : {
+          username: process.env.DB_USER,
+          password: process.env.DB_PASSWORD,
+          database: process.env.DB_NAME,
+          host: process.env.DB_HOST,
+          port: process.env.DB_PORT || 5432,
+        }),
     dialect: "postgres",
     dialectOptions: {
       ssl: {
