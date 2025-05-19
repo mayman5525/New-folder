@@ -1,45 +1,70 @@
-"use strict";
+'use strict';
 
-require("dotenv").config(); // Load environment variables
-const fs = require("fs");
-const path = require("path");
-const Sequelize = require("sequelize");
+const fs = require('fs');
+const path = require('path');
+const Sequelize = require('sequelize');
+const process = require('process');
 const basename = path.basename(__filename);
+const env = process.env.NODE_ENV || 'development';
+const config = require(__dirname + '/../config/config.js')[env];
 const db = {};
 
-// Initialize Sequelize with environment variables
-const sequelize = new Sequelize(
-  process.env.DB_NAME,
-  process.env.DB_USER,
-  process.env.DB_PASSWORD,
-  {
-    host: process.env.DB_HOST,
-    dialect: process.env.DB_DIALECT,
-    port: process.env.DB_PORT,
-    logging: false, // Disable logging for cleaner output
-  }
-);
+// Log database connection info for debugging
+console.log('Environment:', env);
+console.log('DATABASE_URL exists:', !!process.env.DATABASE_URL);
 
-// Read all models in the current directory and import them
-fs.readdirSync(__dirname)
-  .filter((file) => {
+let sequelize;
+if (config.url) {
+  // If a full URL is specified in the config
+  sequelize = new Sequelize(config.url, {
+    dialect: 'postgres',
+    dialectOptions: config.dialectOptions,
+    logging: false
+  });
+} else if (process.env.DATABASE_URL) {
+  // If DATABASE_URL exists but wasn't processed by config
+  sequelize = new Sequelize(process.env.DATABASE_URL, {
+    dialect: 'postgres',
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false
+      }
+    },
+    logging: false
+  });
+} else {
+  // Otherwise use individual connection parameters
+  sequelize = new Sequelize(
+    config.database,
+    config.username,
+    config.password,
+    {
+      host: config.host,
+      port: config.port,
+      dialect: config.dialect,
+      dialectOptions: config.dialectOptions,
+      logging: false
+    }
+  );
+}
+
+fs
+  .readdirSync(__dirname)
+  .filter(file => {
     return (
-      file.indexOf(".") !== 0 &&
+      file.indexOf('.') !== 0 &&
       file !== basename &&
-      file.slice(-3) === ".js" &&
-      file.indexOf(".test.js") === -1
+      file.slice(-3) === '.js' &&
+      file.indexOf('.test.js') === -1
     );
   })
-  .forEach((file) => {
-    const model = require(path.join(__dirname, file))(
-      sequelize,
-      Sequelize.DataTypes
-    );
+  .forEach(file => {
+    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
     db[model.name] = model;
   });
 
-// Apply associations if defined
-Object.keys(db).forEach((modelName) => {
+Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {
     db[modelName].associate(db);
   }
